@@ -1,0 +1,5 @@
+export default function GameIcon({ kind = 'masks' }: { kind?: string }) {
+  return <svg className={`game-icon icon-${kind}`} viewBox="0 0 64 56" fill="none" aria-hidden="true">
+    {kind === 'eye' ? <g stroke="currentColor" strokeWidth="4" strokeLinecap="round"><path d="M4 28Q32 0 60 28 32 56 4 28Z"/><circle cx="32" cy="28" r="12"/><path d="m15 8 5 7m12-12v9m17-4-5 7"/></g> : kind === 'shield' ? <path d="M32 4 54 12v17q-2 15-22 23C12 44 10 39 10 29V12Z" stroke="currentColor" strokeWidth="4" fill="#f3cbb2"/> : <g><path d="M5 7Q19 15 34 7v19Q30 44 20 47 7 41 5 26Z" fill="currentColor" transform="rotate(-13 20 27)"/><path d="M12 22q4-5 8 0m5-1q4-5 8-1M13 30q8 12 17-1" stroke="#fff0d6" strokeWidth="3" strokeLinecap="round" transform="rotate(-13 20 27)"/><path d="M33 12q13 7 26 0v19q-3 17-14 21-10-4-12-21Z" fill="currentColor" opacity=".8" transform="rotate(12 46 32)"/><path d="m38 25 5 2m7 0 5-2m-16 17q7-10 14 0" stroke="#fff0d6" strokeWidth="3" strokeLinecap="round" transform="rotate(12 46 32)"/></g>}
+  </svg>;
+}
