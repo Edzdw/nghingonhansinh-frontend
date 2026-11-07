@@ -34,7 +34,12 @@ export function useGame() {
     if (writing.current || reading.current || !current.current || !apiRef.current) return;
     reading.current = true;
     try { accept(await apiRef.current.snapshot(current.current.code)); }
-    catch { setStatus('Mất kết nối · đang thử lại'); }
+    catch (error) {
+      if (error instanceof ApiError && error.status === 404) {
+        localStorage.removeItem('nn-room-v1'); current.current = undefined; setSnapshot(undefined);
+        setError('Phòng không hoạt động và đã bị đóng.'); setStatus('Phòng đã đóng');
+      } else setStatus('Mất kết nối · đang thử lại');
+    }
     finally { reading.current = false; }
   }, [accept]);
   useEffect(() => {

@@ -23,6 +23,6 @@ export interface GameView {
   voted: boolean; voteCount: number; candidates: string[]; locked: string[];
   ballots: BallotRound[]; log: Event[]; discussionStartedAt?: number; result?: Result;
 }
-export interface Snapshot { apiVersion: typeof API_VERSION; code: string; revision: number; game: GameView }
+export interface Snapshot { apiVersion: typeof API_VERSION; code: string; revision: number; cleanupAt?: number; cleanupReason?: 'inactive' | 'not_enough_players'; game: GameView }
 export interface Feedback { userId: string; fun: number; clarity: number; note: string }
 export interface PlaytestReport { apiVersion: typeof API_VERSION; code: string; players: PublicPlayer[]; result: Result; log: Event[]; feedback: Feedback[] }

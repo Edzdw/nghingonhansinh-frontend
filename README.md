@@ -43,6 +43,7 @@ Supabase realtime chỉ báo revision của phòng → browser gọi NestJS lấ
 - Supabase SDK giữ session trong browser. Mã phòng gần nhất lưu ở `nn-room-v1` trong localStorage.
 - Reload gọi backend snapshot theo token cũ. Không tự chuyển anonymous identity để chiếm lại vai khi token mất.
 - Realtime + polling 4 giây + refresh khi focus/online. Revision thấp hơn snapshot hiện tại bị bỏ qua.
+- Lobby sẽ báo trước 10 giây trước khi đóng nếu im lặng 15 phút hoặc vẫn thiếu 4 người sau 15 phút từ lúc tạo; các điều kiện được gửi trong snapshot và countdown dùng deadline server.
 - Command không tự retry sau timeout; tải lại state rồi người dùng mới quyết định. Phiếu và offer chốt không đổi được.
 - Muốn test nhiều người trên một máy: dùng nhiều browser/profile/incognito session **độc lập**. Hai tab cùng origin/profile chia sẻ một UUID nên vẫn là một người.
 - Thảo luận trực tiếp hoặc cuộc gọi ngoài, chủ phòng chuyển vòng. Người bỏ bàn/chủ phòng mất phiên chưa có tự động thay thế; tạo phòng mới nếu không quay lại được.

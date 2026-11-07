@@ -18,6 +18,15 @@ function Download({ getReport }: { getReport: ReturnType<typeof useGame>['report
 export default function Game() {
   const [showResults, setShowResults] = useState(false);
   const game = useGame(); const g = game.snapshot?.game;
+  const cleanupAt = game.snapshot?.cleanupAt;
+  const [now, setNow] = useState(() => Date.now());
+  useEffect(() => {
+    if (!cleanupAt) return;
+    setNow(Date.now());
+    const timer = window.setInterval(() => setNow(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [cleanupAt]);
+  const cleanupSeconds = cleanupAt ? Math.max(0, Math.ceil((cleanupAt - now) / 1000)) : undefined;
   const [name, setName] = useState(''), [code, setCode] = useState('');
   const [target, setTarget] = useState(''), [card, setCard] = useState<Card>();
   const [reason, setReason] = useState(''), [showRole, setShowRole] = useState(false);
@@ -40,6 +49,7 @@ export default function Game() {
     </> : <>
       <header className="room-header"><div><p className="eyebrow">BÀN CHƠI / <span className="room-code">{game.snapshot!.code}</span></p><h1 className="room-title">{PHASES[g.phase]}<span>.</span></h1><p className="connection"><span className="dot"/>{game.status} · Vòng {g.round}/3</p></div><div className="room-tools"><button className="button small secondary" onClick={async () => { try { await navigator.clipboard.writeText(game.snapshot!.code); setCopied(true); } catch { setCopied(false); } }}>{copied ? 'Đã sao chép ✓' : 'Sao chép mã'}</button><button className="button small secondary" onClick={game.home}>Về trang đầu</button></div></header>
       {game.error && <p role="alert" className="alert error">{game.error}</p>}{game.notice && <p role="status" className="alert">{game.notice}</p>}
+      {cleanupSeconds !== undefined && <p role="alert" className="alert">{game.snapshot?.cleanupReason === 'not_enough_players' ? 'Phòng chưa đủ 4 người' : 'Phòng không hoạt động'} và sẽ bị xóa sau <strong>{cleanupSeconds} giây</strong>. {game.snapshot?.cleanupReason === 'not_enough_players' ? 'Vào đủ 4 người để giữ phòng.' : 'Tham gia hoặc bắt đầu ván để giữ phòng.'}</p>}
       <div className={`room-workspace ${g.phase === 'lobby' ? 'waiting' : ''}`}>
         <section className="room-console" data-phase={g.phase} aria-label="Bài và thao tác của bạn">
           {g.phase === 'lobby' ? <section className="action-panel lobby-panel"><div><p className="eyebrow">CHỜ ĐỦ HỘI</p><h2>{g.players.length}<span className="muted"> / 8 người đã vào</span></h2><p>Cần ít nhất 4 người. Mỗi người dùng một phiên trình duyệt riêng.</p></div>{isHost ? <button className="button primary" disabled={game.busy || g.players.length < 4} onClick={() => void game.command({ type: 'start' })}>Chia vai & bắt đầu →</button> : <p>Chờ chủ phòng bắt đầu…</p>}</section> : <>
